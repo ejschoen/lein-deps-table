@@ -8,7 +8,6 @@ FIXME: Use this for project-level plugins:
 
 Put `[org.clojars.ejschoen/lein-deps-table "0.1.0"]` into the `:plugins` vector of your project.clj.
 
-FIXME: and add an example usage that actually makes sense:
 
     $ lein deps-table :dependencies deps.csv
     $ lein deps-table :dependencies deps.csv :deep true
