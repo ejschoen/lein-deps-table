@@ -29,7 +29,7 @@
     [(first row)
      (second row)
      (if (:exclusions rowmap)
-       (str/join ",\n" (map (fn [x] (if (or (seq? x) (vector? x) (list? x))
+       (str/join ", " (map (fn [x] (if (or (seq? x) (vector? x) (list? x))
                                     (first x)
                                     x))
                           (:exclusions rowmap))))
@@ -53,15 +53,16 @@
         options (apply hash-map args)
         [dependencies-key managed-dependencies-key] (deps-command command [:dependencies :managed-dependencies])
         deep? (get options ":deep")
+        no-header (get options ":no-header")
         hierarchy (if deep?
                     (classpath/managed-dependency-hierarchy
                      dependencies-key
                      managed-dependencies-key
                      project))
         rows (map rowify (if deep? (flatten-deps hierarchy) (dependencies-key project)))]
-    (with-open [writer (io/writer filename)]
+    (with-open [writer (if (= filename "-") (io/writer System/out) (io/writer filename))]
       (csv/write-csv writer
-                     (concat [["Group/Artifact" "Version" "Exclusions" "Classifier"]]
+                     (concat (if no-header [] [["Group/Artifact" "Version" "Exclusions" "Classifier"]])
                              rows)))))
                        
                      
